@@ -6,6 +6,8 @@ import { JoinModal } from '../components/JoinModal';
 import avatar from '../images/avatar.png';
 
 export const HubPage: React.FC = () => {
+
+
     return (
         <div className="hub__container">
             <div className="logo__container">

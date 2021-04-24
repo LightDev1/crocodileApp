@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+
 import { CreateRoom } from './pages/CreateRoom';
 import { GamePage } from './pages/GamePage';
-
 import { HubPage } from './pages/HubPage';
 
 function App() {
