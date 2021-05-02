@@ -4,6 +4,11 @@ import { Invite } from '../components/Invite';
 import { PlayersList } from '../components/PlayersList';
 
 export const CreateRoom: React.FC = () => {
+
+    const clickHandler = () => {
+
+    };
+
     return (
         <div className="create__container">
             <div className="first-grid">
@@ -63,6 +68,7 @@ export const CreateRoom: React.FC = () => {
                     <div className="btn__container">
                         <button
                             className="start-btn"
+                            onClick={clickHandler}
                         >
                             Начать игру
                         </button>

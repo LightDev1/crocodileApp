@@ -10,7 +10,7 @@ export interface CreateRoomActionInterface extends Action<RoomsActionsType> {
     payload: RoomState;
 }
 
-export const setRoom = (payload: RoomState): CreateRoomActionInterface => ({
+export const createRoom = (payload: RoomState): CreateRoomActionInterface => ({
     type: RoomsActionsType.CREATE_ROOM,
     payload,
 });

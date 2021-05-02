@@ -1,14 +1,11 @@
 import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectColor, selectToClear } from '../store/ducks/canvas/selectors';
 
-interface CanvasPanelProps {
-    color: string;
-    changeColor: (arg: string) => void;
-    changeTool: (arg: string) => void;
-    changeRadiusButton: (arg: string) => void;
-    changeToClear: () => void;
-}
-
-export const CanvasPanel: React.FC<CanvasPanelProps> = ({ color, changeColor, changeTool, changeRadiusButton, changeToClear }: CanvasPanelProps) => {
+export const CanvasPanel: React.FC = () => {
+    const dispatch = useDispatch();
+    const color = useSelector(selectColor);
+    const toClear = useSelector(selectToClear);
     const currentColor = useRef(null);
 
     useEffect(() => {
@@ -18,15 +15,36 @@ export const CanvasPanel: React.FC<CanvasPanelProps> = ({ color, changeColor, ch
 
     const onlickColor = (event: any): void => {
         const element = event.target;
-        changeColor(element.dataset.color);
+        const payload = {
+            color: element.dataset.color,
+        };
+
+        dispatch({
+            type: 'canvas/SET_COLOR',
+            payload,
+        });
     };
 
     const onClickTool = (tool: string): void => {
-        changeTool(tool);
+        const payload = {
+            tool,
+        };
+
+        dispatch({
+            type: 'canvas/SET_TOOL',
+            payload,
+        });
     };
 
     const onChangeToClear = () => {
-        changeToClear();
+        const payload = {
+            toClear: !toClear,
+        };
+
+        dispatch({
+            type: 'canvas/SET_TO_CLEAR',
+            payload,
+        })
     };
 
     return (
@@ -62,16 +80,16 @@ export const CanvasPanel: React.FC<CanvasPanelProps> = ({ color, changeColor, ch
                     <button className="eraser" onClick={() => { onClickTool('eraser') }}></button>
                 </div>
                 <div className="brush-radius__container">
-                    <button className="small" onClick={() => { changeRadiusButton('small') }}>
+                    <button className="small" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 5 } }) }}>
                         <div className="circle-small"></div>
                     </button>
-                    <button className="normal" onClick={() => { changeRadiusButton('normal') }}>
+                    <button className="normal" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 10 } }) }}>
                         <div className="circle-normal"></div>
                     </button>
-                    <button className="big" onClick={() => { changeRadiusButton('big') }}>
+                    <button className="big" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 15 } }) }}>
                         <div className="circle-big"></div>
                     </button>
-                    <button className="very-big" onClick={() => { changeRadiusButton('very-big') }}>
+                    <button className="very-big" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 17.5 } }) }}>
                         <div className="circle-very-big"></div>
                     </button>
                 </div>

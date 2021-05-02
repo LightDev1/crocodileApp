@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
+import { useSelector } from 'react-redux';
+import { selectColor, selectRadius, selectToClear, selectTool } from '../store/ducks/canvas/selectors';
 
-interface CanvasProps {
-    color: string;
-    tool: string;
-    radiusButton: string;
-    toClear: boolean;
-}
-
-export const Canvas: React.FC<CanvasProps> = ({ color, tool, radiusButton, toClear }: CanvasProps) => {
-    const [radius, setRadius] = useState(10);
+export const Canvas: React.FC = () => {
+    const color = useSelector(selectColor);
+    const tool = useSelector(selectTool);
+    const radius = useSelector(selectRadius);
+    const toClear = useSelector(selectToClear);
     const [brushColor, setBrushColor] = useState(color);
 
     let saveableCanvas: any;
@@ -29,28 +27,6 @@ export const Canvas: React.FC<CanvasProps> = ({ color, tool, radiusButton, toCle
         }
     }, [tool, setBrushColor, color]);
 
-    useEffect(() => {
-        switch (radiusButton) {
-            case 'small':
-                setRadius(5);
-                break;
-
-            case 'normal':
-                setRadius(10);
-                break;
-
-            case 'big':
-                setRadius(15);
-                break;
-
-            case 'very-big':
-                setRadius(17.5);
-                break;
-
-            default:
-                break;
-        }
-    }, [radiusButton]);
 
     useEffect(() => {
         saveableCanvas.clear();

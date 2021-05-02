@@ -13,7 +13,6 @@ const initialRoomState: RoomState = {
 
 export const roomReducer = produce((draft: Draft<RoomState>, action: RoomAction) => {
     if (action.type === RoomsActionsType.CREATE_ROOM) {
-        console.log(draft);
         draft.item = action.payload.item;
     }
 }, initialRoomState);
