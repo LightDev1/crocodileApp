@@ -1,8 +1,9 @@
 export interface Room {
-    rounds: number,
-    time: number,
-    words: Array<string>,
-    messages: Array<string>,
+    id: string;
+    rounds: number;
+    time: number;
+    words: string;
+    messages: Array<string>;
 }
 
 export interface RoomState {

@@ -16,6 +16,8 @@ const rooms = new Map();
 app.post('/api/create_room', (req: express.Request, res: express.Response) => {
     const { rounds, time, words, id } = req.body;
 
+    console.log(rounds, time, words, id);
+
     if (!rooms.has(id)) {
         rooms.set(id, new Map([
             ['users', new Map()],
@@ -26,7 +28,7 @@ app.post('/api/create_room', (req: express.Request, res: express.Response) => {
         ]));
     }
 
-    res.json([...rooms.values()]);
+    res.json('Good');
 });
 
 io.on('connection', (socket: any) => {

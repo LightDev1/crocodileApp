@@ -1,12 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Invite } from '../components/Invite';
 import { PlayersList } from '../components/PlayersList';
+import { setRoomId, setRounds, setTime, setWords } from '../store/ducks/rooms/actionCreators';
+import { createRoom } from '../store/ducks/rooms/actionCreators';
+import { selectRoomId, selectRounds, selectTime, selectWords } from '../store/ducks/rooms/selectors';
+import { generateMD5 } from '../utils/generateHash';
 
 export const CreateRoom: React.FC = () => {
+    const dispatch = useDispatch();
+    const roomId = useSelector(selectRoomId);
+    const rounds = useSelector(selectRounds);
+    const time = useSelector(selectTime);
+    const words = useSelector(selectWords);
+
+    useEffect(() => {
+        dispatch(setRoomId(generateMD5(Date.now().toString())));
+    }, [dispatch]);
 
     const clickHandler = () => {
-
+        dispatch(createRoom({
+            item: {
+                id: roomId,
+                rounds,
+                time,
+                words,
+                messages: []
+            }
+        }))
     };
 
     return (
@@ -19,6 +41,11 @@ export const CreateRoom: React.FC = () => {
                         <select
                             className="rounds"
                             id="rounds"
+                            value={rounds}
+                            onChange={(event) => {
+                                const payload = Number(event.target.value);
+                                dispatch(setRounds(payload));
+                            }}
                         >
                             <option value={2}>2</option>
                             <option value={3}>3</option>
@@ -36,6 +63,11 @@ export const CreateRoom: React.FC = () => {
                         <select
                             className="time"
                             id="time"
+                            value={time}
+                            onChange={(event) => {
+                                const payload = Number(event.target.value);
+                                dispatch(setTime(payload));
+                            }}
                         >
                             <option value={30}>30</option>
                             <option value={40}>40</option>
@@ -54,7 +86,7 @@ export const CreateRoom: React.FC = () => {
                     </div>
                     <label className="customs-check">
                         <input type="checkbox" />
-                    Использовать кастомные слова
+                        Использовать кастомные слова
                 </label>
                     <div className="custom-words__container">
                         <label className="custom-words" htmlFor="custom-words">Пользовательские слова</label>
@@ -62,6 +94,10 @@ export const CreateRoom: React.FC = () => {
                             name="custom-words"
                             id="custom-words"
                             placeholder="Здесь вы можете написать свои слова и играть с ними (минимум 4 слова)"
+                            value={words}
+                            onChange={(event) => {
+                                dispatch(setWords(event.target.value));
+                            }}
                         >
                         </textarea>
                     </div>
