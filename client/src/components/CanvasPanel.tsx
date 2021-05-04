@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setColor, setRadius, setToClear, setTool } from '../store/ducks/canvas/actionCreators';
 import { selectColor, selectToClear } from '../store/ducks/canvas/selectors';
 
 export const CanvasPanel: React.FC = () => {
@@ -15,36 +16,16 @@ export const CanvasPanel: React.FC = () => {
 
     const onlickColor = (event: any): void => {
         const element = event.target;
-        const payload = {
-            color: element.dataset.color,
-        };
 
-        dispatch({
-            type: 'canvas/SET_COLOR',
-            payload,
-        });
+        dispatch(setColor(element.dataset.color));
     };
 
     const onClickTool = (tool: string): void => {
-        const payload = {
-            tool,
-        };
-
-        dispatch({
-            type: 'canvas/SET_TOOL',
-            payload,
-        });
+        dispatch(setTool(tool));
     };
 
     const onChangeToClear = () => {
-        const payload = {
-            toClear: !toClear,
-        };
-
-        dispatch({
-            type: 'canvas/SET_TO_CLEAR',
-            payload,
-        })
+        dispatch(setToClear(!toClear));
     };
 
     return (
@@ -80,16 +61,16 @@ export const CanvasPanel: React.FC = () => {
                     <button className="eraser" onClick={() => { onClickTool('eraser') }}></button>
                 </div>
                 <div className="brush-radius__container">
-                    <button className="small" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 5 } }) }}>
+                    <button className="small" onClick={() => { dispatch(setRadius(5)) }}>
                         <div className="circle-small"></div>
                     </button>
-                    <button className="normal" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 10 } }) }}>
+                    <button className="normal" onClick={() => { dispatch(setRadius(10)) }}>
                         <div className="circle-normal"></div>
                     </button>
-                    <button className="big" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 15 } }) }}>
+                    <button className="big" onClick={() => { dispatch(setRadius(15)) }}>
                         <div className="circle-big"></div>
                     </button>
-                    <button className="very-big" onClick={() => { dispatch({ type: 'canvas/SET_RADIUS', payload: { radius: 17.5 } }) }}>
+                    <button className="very-big" onClick={() => { dispatch(setRadius(17.5)) }}>
                         <div className="circle-very-big"></div>
                     </button>
                 </div>

@@ -1,5 +1,11 @@
-import io from 'socket.io-client';
+import { useCallback } from 'react';
+import io, { Socket } from 'socket.io-client';
 
-const socket = io();
+export const useSocket = () => {
+    const connectToSocket = useCallback((): Socket => {
+        const socket = io();
+        return socket;
+    }, []);
 
-export default socket;
+    return { connectToSocket }
+};

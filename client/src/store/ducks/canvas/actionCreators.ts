@@ -1,5 +1,4 @@
 import { Action } from "redux";
-import { Canvas } from "./contracts/state";
 
 export enum CanvasActionsType {
     SET_COLOR = 'canvas/SET_COLOR',
@@ -10,40 +9,40 @@ export enum CanvasActionsType {
 
 export interface SetColorActionInterface extends Action<CanvasActionsType> {
     type: CanvasActionsType.SET_COLOR;
-    payload: Canvas;
+    payload: string;
 }
 
 export interface SetToolActionInterface extends Action<CanvasActionsType> {
     type: CanvasActionsType.SET_TOOL;
-    payload: Canvas;
+    payload: string;
 }
 
 export interface SetRadiusButtonActionInterface extends Action<CanvasActionsType> {
     type: CanvasActionsType.SET_RADIUS;
-    payload: Canvas;
+    payload: number;
 }
 
 export interface SetToClearActionInterface extends Action<CanvasActionsType> {
     type: CanvasActionsType.SET_TO_CLEAR;
-    payload: Canvas;
+    payload: boolean;
 }
 
-export const setColor = (payload: Canvas): SetColorActionInterface => ({
+export const setColor = (payload: string): SetColorActionInterface => ({
     type: CanvasActionsType.SET_COLOR,
     payload,
 });
 
-export const setTool = (payload: Canvas): SetToolActionInterface => ({
+export const setTool = (payload: string): SetToolActionInterface => ({
     type: CanvasActionsType.SET_TOOL,
     payload,
 });
 
-export const setRadiusButton = (payload: Canvas): SetRadiusButtonActionInterface => ({
+export const setRadius = (payload: number): SetRadiusButtonActionInterface => ({
     type: CanvasActionsType.SET_RADIUS,
     payload,
 });
 
-export const setToClear = (payload: Canvas): SetToClearActionInterface => ({
+export const setToClear = (payload: boolean): SetToClearActionInterface => ({
     type: CanvasActionsType.SET_TO_CLEAR,
     payload,
 });

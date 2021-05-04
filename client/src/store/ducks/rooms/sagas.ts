@@ -11,7 +11,17 @@ export function* createRoomRequest({ payload }: CreateRoomActionInterface): Gene
     }
 }
 
+export function* setRoomSettingsRequest({ payload }: CreateRoomActionInterface): Generator {
+    try {
+        const data = yield call(RoomApi.setRoomSettings, payload.item);
+        console.log(data);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export function* createRoomSaga() {
     yield takeEvery(RoomsActionsType.CREATE_ROOM, createRoomRequest);
+    yield takeEvery(RoomsActionsType.SET_ROOM_SETTINGS, setRoomSettingsRequest);
 }
 

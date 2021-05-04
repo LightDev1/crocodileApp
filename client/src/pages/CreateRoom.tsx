@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Invite } from '../components/Invite';
 import { PlayersList } from '../components/PlayersList';
-import { setRoomId, setRounds, setTime, setWords } from '../store/ducks/rooms/actionCreators';
-import { createRoom } from '../store/ducks/rooms/actionCreators';
+import { setRounds, setTime, setWords } from '../store/ducks/rooms/actionCreators';
+import { setRoomSettings } from '../store/ducks/rooms/actionCreators';
 import { selectRoomId, selectRounds, selectTime, selectWords } from '../store/ducks/rooms/selectors';
-import { generateMD5 } from '../utils/generateHash';
 
 export const CreateRoom: React.FC = () => {
     const dispatch = useDispatch();
@@ -15,12 +14,8 @@ export const CreateRoom: React.FC = () => {
     const time = useSelector(selectTime);
     const words = useSelector(selectWords);
 
-    useEffect(() => {
-        dispatch(setRoomId(generateMD5(Date.now().toString())));
-    }, [dispatch]);
-
     const clickHandler = () => {
-        dispatch(createRoom({
+        dispatch(setRoomSettings({
             item: {
                 id: roomId,
                 rounds,
@@ -28,7 +23,7 @@ export const CreateRoom: React.FC = () => {
                 words,
                 messages: []
             }
-        }))
+        }));
     };
 
     return (

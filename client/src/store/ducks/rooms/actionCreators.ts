@@ -3,6 +3,7 @@ import { RoomState } from "./contracts/state";
 
 export enum RoomsActionsType {
     CREATE_ROOM = 'rooms/CREATE_ROOM',
+    SET_ROOM_SETTINGS = 'rooms/SET_ROOM_SETTINGS',
     SET_ROOM_ID = 'rooms/SET_ROOM_ID',
     SET_ROUNDS = 'rooms/SET_ROUNDS',
     SET_TIME = 'rooms/SET_TIME',
@@ -11,6 +12,11 @@ export enum RoomsActionsType {
 
 export interface CreateRoomActionInterface extends Action<RoomsActionsType> {
     type: RoomsActionsType.CREATE_ROOM;
+    payload: RoomState;
+}
+
+export interface SetSettingsRoomActionInterface extends Action<RoomsActionsType> {
+    type: RoomsActionsType.SET_ROOM_SETTINGS;
     payload: RoomState;
 }
 
@@ -39,6 +45,11 @@ export const createRoom = (payload: RoomState): CreateRoomActionInterface => ({
     payload,
 });
 
+export const setRoomSettings = (payload: RoomState): SetSettingsRoomActionInterface => ({
+    type: RoomsActionsType.SET_ROOM_SETTINGS,
+    payload,
+});
+
 export const setRoomId = (payload: string): SetRoomIdActionInterface => ({
     type: RoomsActionsType.SET_ROOM_ID,
     payload,
@@ -59,4 +70,4 @@ export const setWords = (payload: string): SetWordsActionInterface => ({
     payload,
 });
 
-export type RoomAction = CreateRoomActionInterface | SetRoomIdActionInterface | SetRoundsActionInterface | SetTimeActionInterface | SetWordsActionInterface;
+export type RoomAction = CreateRoomActionInterface | SetSettingsRoomActionInterface | SetRoomIdActionInterface | SetRoundsActionInterface | SetTimeActionInterface | SetWordsActionInterface;

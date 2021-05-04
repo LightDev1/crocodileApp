@@ -11,19 +11,19 @@ const initialCanvasState: Canvas = {
 
 export const canvasReducer = produce((draft: Draft<Canvas>, action: CanvasAction) => {
     if (action.type === CanvasActionsType.SET_COLOR) {
-        draft.color = action.payload.color
+        draft.color = action.payload;
     }
 
     if (action.type === CanvasActionsType.SET_TOOL) {
-        draft.tool = action.payload.tool;
+        draft.tool = action.payload;
     }
 
     if (action.type === CanvasActionsType.SET_RADIUS) {
-        draft.radius = action.payload.radius;
+        draft.radius = action.payload;
     }
 
     if (action.type === CanvasActionsType.SET_TO_CLEAR) {
-        draft.toClear = action.payload.toClear;
+        draft.toClear = action.payload;
     }
 }, initialCanvasState);
 

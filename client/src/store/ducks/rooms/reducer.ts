@@ -17,10 +17,9 @@ export const roomReducer = produce((draft: Draft<RoomState>, action: RoomAction)
         draft.item = action.payload.item;
     }
 
-    if (action.type === RoomsActionsType.SET_ROOM_ID) {
-        draft.item.id = action.payload;
+    if (action.type === RoomsActionsType.SET_ROOM_SETTINGS) {
+        draft.item = action.payload.item;
     }
-
 
     if (action.type === RoomsActionsType.SET_ROUNDS) {
         draft.item.rounds = action.payload;

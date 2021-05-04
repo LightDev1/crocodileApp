@@ -28,7 +28,25 @@ app.post('/api/create_room', (req: express.Request, res: express.Response) => {
         ]));
     }
 
-    res.json('Good');
+    res.json('Комната была создана');
+});
+
+app.post('/api/set_settigs', (req: express.Request, res: express.Response) => {
+    const { rounds, time, words, id } = req.body;
+
+    console.log(rounds, time, words, id);
+
+    if (!rooms.has(id)) {
+        rooms.set(id, new Map([
+            ['users', new Map()],
+            ['words', words],
+            ['messages', []],
+            ['rounds', rounds],
+            ['time', time],
+        ]));
+    }
+
+    res.json('Комната была настроена');
 });
 
 io.on('connection', (socket: any) => {
@@ -40,4 +58,3 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Сервер был запущен на порте ${PORT}`);
 });
-
