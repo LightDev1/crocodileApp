@@ -5,11 +5,12 @@ import { Invite } from '../components/Invite';
 import { PlayersList } from '../components/PlayersList';
 import { setRounds, setTime, setWords } from '../store/ducks/rooms/actionCreators';
 import { setRoomSettings } from '../store/ducks/rooms/actionCreators';
-import { selectRoomId, selectRounds, selectTime, selectWords } from '../store/ducks/rooms/selectors';
+import { selectRoomId, selectRounds, selectTime, selectUsers, selectWords } from '../store/ducks/rooms/selectors';
 
 export const CreateRoom: React.FC = () => {
     const dispatch = useDispatch();
     const roomId = useSelector(selectRoomId);
+    const users = useSelector(selectUsers);
     const rounds = useSelector(selectRounds);
     const time = useSelector(selectTime);
     const words = useSelector(selectWords);
@@ -18,6 +19,7 @@ export const CreateRoom: React.FC = () => {
         dispatch(setRoomSettings({
             item: {
                 id: roomId,
+                users,
                 rounds,
                 time,
                 words,

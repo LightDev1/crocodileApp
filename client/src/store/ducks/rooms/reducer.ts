@@ -5,6 +5,7 @@ import { RoomState } from './contracts/state';
 const initialRoomState: RoomState = {
     item: {
         id: '',
+        users: [],
         rounds: 2,
         time: 30,
         words: '',

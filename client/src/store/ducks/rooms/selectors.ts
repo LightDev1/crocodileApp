@@ -5,6 +5,8 @@ export const selectRoom = (state: RootState): RoomState => state.room;
 
 export const selectRoomId = (state: RootState) => selectRoom(state).item.id;
 
+export const selectUsers = (state: RootState) => selectRoom(state).item.users;
+
 export const selectRounds = (state: RootState) => selectRoom(state).item.rounds;
 
 export const selectTime = (state: RootState) => selectRoom(state).item.time;

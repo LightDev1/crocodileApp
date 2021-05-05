@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
+import { roomCtrl } from './controllers/roomController';
 
 const app = express();
 const server = http.createServer(app);
@@ -11,43 +12,10 @@ const io = new Server(server);
 
 app.use(express.json());
 
-const rooms = new Map();
+export const rooms = new Map();
 
-app.post('/api/create_room', (req: express.Request, res: express.Response) => {
-    const { rounds, time, words, id } = req.body;
-
-    console.log(rounds, time, words, id);
-
-    if (!rooms.has(id)) {
-        rooms.set(id, new Map([
-            ['users', new Map()],
-            ['words', words],
-            ['messages', []],
-            ['rounds', rounds],
-            ['time', time],
-        ]));
-    }
-
-    res.json('Комната была создана');
-});
-
-app.post('/api/set_settigs', (req: express.Request, res: express.Response) => {
-    const { rounds, time, words, id } = req.body;
-
-    console.log(rounds, time, words, id);
-
-    if (!rooms.has(id)) {
-        rooms.set(id, new Map([
-            ['users', new Map()],
-            ['words', words],
-            ['messages', []],
-            ['rounds', rounds],
-            ['time', time],
-        ]));
-    }
-
-    res.json('Комната была настроена');
-});
+app.post('/api/create_room', roomCtrl.createRoom);
+app.post('/api/set_settigs', roomCtrl.setSettings);
 
 io.on('connection', (socket: any) => {
     console.log('Пользователь подключился, socket:', socket.id);

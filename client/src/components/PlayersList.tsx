@@ -1,31 +1,20 @@
 import React from 'react';
 import avatar from '../images/avatar.png';
+import { selectUsers } from '../store/ducks/rooms/selectors';
 
 export const PlayersList: React.FC = () => {
+
     return (
         <div className="players__container">
             <h2>Игроки</h2>
             <div className="players__list">
-                <div className="player">
-                    <img src={avatar} alt="Аватар пользователя" />
-                    <span>Игрок</span>
-                </div>
-                <div className="player">
-                    <img src={avatar} alt="Аватар пользователя" />
-                    <span>Игрок</span>
-                </div>
-                <div className="player">
-                    <img src={avatar} alt="Аватар пользователя" />
-                    <span>Игрок</span>
-                </div>
-                <div className="player">
-                    <img src={avatar} alt="Аватар пользователя" />
-                    <span>Игрок</span>
-                </div>
-                <div className="player">
-                    <img src={avatar} alt="Аватар пользователя" />
-                    <span>Игрок</span>
-                </div>
+                {/* {users.map(user => (
+                    <div className="player" key={user}>
+                        <img src={avatar} alt="Аватар пользователя" />
+                        <span>{user}</span>
+                    </div>
+                )
+                )} */}
             </div>
         </div>
     );
