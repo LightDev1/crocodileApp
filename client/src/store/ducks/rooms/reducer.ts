@@ -5,11 +5,11 @@ import { RoomState } from './contracts/state';
 const initialRoomState: RoomState = {
     item: {
         id: '',
-        users: [],
         rounds: 2,
         time: 30,
         words: '',
         messages: [],
+        users: [],
     }
 };
 
@@ -22,12 +22,20 @@ export const roomReducer = produce((draft: Draft<RoomState>, action: RoomAction)
         draft.item = action.payload.item;
     }
 
+    if (action.type === RoomsActionsType.SET_ROOM_ID) {
+        draft.item.id = action.payload;
+    }
+
     if (action.type === RoomsActionsType.SET_ROUNDS) {
         draft.item.rounds = action.payload;
     }
 
     if (action.type === RoomsActionsType.SET_TIME) {
         draft.item.time = action.payload;
+    }
+
+    if (action.type === RoomsActionsType.SET_USERS) {
+        draft.item.users = action.payload;
     }
 
     if (action.type === RoomsActionsType.SET_WORDS) {

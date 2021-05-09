@@ -3,7 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { roomCtrl } from './controllers/roomController';
 
 const app = express();
@@ -17,7 +17,21 @@ export const rooms = new Map();
 app.post('/api/create_room', roomCtrl.createRoom);
 app.post('/api/set_settigs', roomCtrl.setSettings);
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket: Socket) => {
+    socket.on('ROOM:JOIN', ({ roomId, username }) => {
+        try {
+            socket.join(roomId);
+            rooms.get(roomId).get('users').set(socket.id, username);
+
+            const users = [...rooms.get(roomId).get('users').values()];
+
+            socket.broadcast.to(roomId).emit('ROOM:SET_USERS', users);
+            console.log(users);
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
     console.log('Пользователь подключился, socket:', socket.id);
 });
 

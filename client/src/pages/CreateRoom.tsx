@@ -10,20 +10,20 @@ import { selectRoomId, selectRounds, selectTime, selectUsers, selectWords } from
 export const CreateRoom: React.FC = () => {
     const dispatch = useDispatch();
     const roomId = useSelector(selectRoomId);
-    const users = useSelector(selectUsers);
     const rounds = useSelector(selectRounds);
     const time = useSelector(selectTime);
     const words = useSelector(selectWords);
+    const users = useSelector(selectUsers);
 
     const clickHandler = () => {
         dispatch(setRoomSettings({
             item: {
                 id: roomId,
-                users,
                 rounds,
                 time,
                 words,
-                messages: []
+                messages: [],
+                users,
             }
         }));
     };

@@ -1,45 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { JoinModal } from '../components/JoinModal';
-import { useSocket } from '../socket';
-
+import socket from '../socket';
 import avatar from '../images/avatar.png';
-import { createRoom } from '../store/ducks/rooms/actionCreators';
+import { createRoom, setUsers } from '../store/ducks/rooms/actionCreators';
 import { generateMD5 } from '../utils/generateHash';
+import { selectName } from '../store/ducks/user/selectors';
+import { selectUsers } from '../store/ducks/rooms/selectors';
+import { setName } from '../store/ducks/user/actionCreators';
 
 export const HubPage: React.FC = () => {
     const dispatch = useDispatch();
-    const { connectToSocket } = useSocket();
-    const [name, setName] = useState('');
+    const roomId = generateMD5(Date.now().toString());
+    const users = useSelector(selectUsers);
+    const name = useSelector(selectName);
     const history = useHistory();
 
-    const createRoomRequest = () => {
+    const createRoomRequest = async () => {
         if (name) {
-            const users = [name];
-
-            dispatch(createRoom({
+            await dispatch(createRoom({
                 item: {
-                    id: generateMD5(Date.now().toString()),
+                    id: roomId,
                     rounds: 2,
                     time: 30,
                     words: '',
                     messages: [],
-                    users,
+                    users
                 }
             }));
+
+            socket.emit('ROOM:JOIN', {
+                roomId,
+                username: name,
+            });
 
             history.push('/create');
         } else {
             alert('Введите имя');
         }
-
     };
 
     useEffect(() => {
-        connectToSocket();
-    }, [connectToSocket]);
+        socket.on('ROOM:SET_USERS', (users) => {
+            dispatch(setUsers(users));
+            console.log(users);
+        });
+    }, [dispatch]);
 
     return (
         <div className="hub__container">
@@ -51,7 +59,7 @@ export const HubPage: React.FC = () => {
                     type="text"
                     placeholder="Введите имя"
                     value={name}
-                    onChange={(event) => { setName(event.target.value) }}
+                    onChange={(event) => { dispatch(setName(event.target.value)) }}
                 />
                 <div className="avatar-choose__container">
                     <img src={avatar} alt="Аватар пользователя" />

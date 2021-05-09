@@ -8,6 +8,7 @@ export enum RoomsActionsType {
     SET_ROUNDS = 'rooms/SET_ROUNDS',
     SET_TIME = 'rooms/SET_TIME',
     SET_WORDS = 'rooms/SET_WORDS',
+    SET_USERS = 'rooms/SET_USERS',
 }
 
 export interface CreateRoomActionInterface extends Action<RoomsActionsType> {
@@ -40,6 +41,11 @@ export interface SetWordsActionInterface extends Action<RoomsActionsType> {
     payload: string;
 }
 
+export interface SetUsersActionInterface extends Action<RoomsActionsType> {
+    type: RoomsActionsType.SET_USERS;
+    payload: Array<string>;
+}
+
 export const createRoom = (payload: RoomState): CreateRoomActionInterface => ({
     type: RoomsActionsType.CREATE_ROOM,
     payload,
@@ -70,4 +76,15 @@ export const setWords = (payload: string): SetWordsActionInterface => ({
     payload,
 });
 
-export type RoomAction = CreateRoomActionInterface | SetSettingsRoomActionInterface | SetRoomIdActionInterface | SetRoundsActionInterface | SetTimeActionInterface | SetWordsActionInterface;
+export const setUsers = (payload: Array<string>): SetUsersActionInterface => ({
+    type: RoomsActionsType.SET_USERS,
+    payload,
+});
+
+export type RoomAction = CreateRoomActionInterface
+    | SetSettingsRoomActionInterface
+    | SetRoomIdActionInterface
+    | SetRoundsActionInterface
+    | SetTimeActionInterface
+    | SetWordsActionInterface
+    | SetUsersActionInterface;
