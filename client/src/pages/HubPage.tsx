@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { JoinModal } from '../components/JoinModal';
@@ -9,14 +8,14 @@ import { createRoom, setUsers } from '../store/ducks/rooms/actionCreators';
 import { generateMD5 } from '../utils/generateHash';
 import { selectName } from '../store/ducks/user/selectors';
 import { selectUsers } from '../store/ducks/rooms/selectors';
-import { setName } from '../store/ducks/user/actionCreators';
+import { setJoined, setName } from '../store/ducks/user/actionCreators';
+import axios from 'axios';
 
 export const HubPage: React.FC = () => {
     const dispatch = useDispatch();
     const roomId = generateMD5(Date.now().toString());
     const users = useSelector(selectUsers);
     const name = useSelector(selectName);
-    const history = useHistory();
 
     const createRoomRequest = async () => {
         if (name) {
@@ -31,12 +30,16 @@ export const HubPage: React.FC = () => {
                 }
             }));
 
-            socket.emit('ROOM:JOIN', {
+            await socket.emit('ROOM:JOIN', {
                 roomId,
                 username: name,
             });
 
-            history.push('/create');
+            const { data } = await axios.get(`/api/room_data/${roomId}`);
+
+            dispatch(setUsers(data.users));
+
+            dispatch(setJoined(true));
         } else {
             alert('Введите имя');
         }

@@ -16,6 +16,7 @@ export const rooms = new Map();
 
 app.post('/api/create_room', roomCtrl.createRoom);
 app.post('/api/set_settigs', roomCtrl.setSettings);
+app.get('/api/room_data/:id', roomCtrl.index);
 
 io.on('connection', (socket: Socket) => {
     socket.on('ROOM:JOIN', ({ roomId, username }) => {
@@ -27,6 +28,20 @@ io.on('connection', (socket: Socket) => {
 
             socket.broadcast.to(roomId).emit('ROOM:SET_USERS', users);
             console.log(users);
+        } catch (e) {
+            console.log(e);
+            socket.emit('ROOM:ERROR', { message: 'Комнаты с таким кодом не существует' });
+        }
+    });
+
+    socket.on('disconnect', () => {
+        try {
+            rooms.forEach((value, roomId) => {
+                if (value.get('users').delete(socket.id)) {
+                    const users = [...value.get('users').values()];
+                    socket.broadcast.to(roomId).emit('ROOM:SET_USERS', users);
+                }
+            });
         } catch (e) {
             console.log(e);
         }

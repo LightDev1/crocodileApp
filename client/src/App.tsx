@@ -1,25 +1,15 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { CreateRoom } from './pages/CreateRoom';
-import { GamePage } from './pages/GamePage';
 import { HubPage } from './pages/HubPage';
+import { selectJoined } from './store/ducks/user/selectors';
 
 function App() {
+  const joined = useSelector(selectJoined);
   return (
     <div className="app__container">
-      <Switch>
-        <Route path="/" exact>
-          <HubPage />
-        </Route>
-        <Route path="/create">
-          <CreateRoom />
-        </Route>
-        <Route path="/game">
-          <GamePage />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+      {!joined ? <HubPage /> : <CreateRoom />}
     </div>
   );
 }

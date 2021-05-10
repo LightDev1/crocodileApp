@@ -4,12 +4,17 @@ import { UserState } from './contracts/state';
 
 const initiaUserState: UserState = {
     name: '',
+    joined: false,
     messages: []
 };
 
 export const userReducer = produce((draft: Draft<UserState>, action: any) => {
     if (action.type === UserActionsType.SET_NAME) {
         draft.name = action.payload;
+    }
+
+    if (action.type === UserActionsType.SET_JOINED) {
+        draft.joined = action.payload;
     }
 
     if (action.type === UserActionsType.SET_MESSAGE) {
