@@ -454,9 +454,10 @@ body {
         margin-left: 9px;
 
         .messages__container {
-          height: 90%;
+          height: 558px;
           box-sizing: border-box;
           margin: 10px 5px;
+          overflow: auto;
 
           .message__container {
             display: flex;

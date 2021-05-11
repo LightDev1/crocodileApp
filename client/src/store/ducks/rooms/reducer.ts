@@ -5,6 +5,7 @@ import { RoomState } from './contracts/state';
 const initialRoomState: RoomState = {
     item: {
         id: '',
+        started: false,
         rounds: 2,
         time: 30,
         words: '',
@@ -26,6 +27,10 @@ export const roomReducer = produce((draft: Draft<RoomState>, action: RoomAction)
         draft.item.id = action.payload;
     }
 
+    if (action.type === RoomsActionsType.SET_STARTED) {
+        draft.item.started = action.payload;
+    }
+
     if (action.type === RoomsActionsType.SET_ROUNDS) {
         draft.item.rounds = action.payload;
     }
@@ -36,6 +41,10 @@ export const roomReducer = produce((draft: Draft<RoomState>, action: RoomAction)
 
     if (action.type === RoomsActionsType.SET_USERS) {
         draft.item.users = action.payload;
+    }
+
+    if (action.type === RoomsActionsType.SET_MESSAGES) {
+        draft.item.messages = [...draft.item.messages, action.payload];
     }
 
     if (action.type === RoomsActionsType.SET_WORDS) {

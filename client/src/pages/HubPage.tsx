@@ -8,7 +8,7 @@ import { createRoom, setUsers } from '../store/ducks/rooms/actionCreators';
 import { generateMD5 } from '../utils/generateHash';
 import { selectName } from '../store/ducks/user/selectors';
 import { selectUsers } from '../store/ducks/rooms/selectors';
-import { setJoined, setName } from '../store/ducks/user/actionCreators';
+import { setHost, setJoined, setName } from '../store/ducks/user/actionCreators';
 import axios from 'axios';
 
 export const HubPage: React.FC = () => {
@@ -22,6 +22,7 @@ export const HubPage: React.FC = () => {
             await dispatch(createRoom({
                 item: {
                     id: roomId,
+                    started: false,
                     rounds: 2,
                     time: 30,
                     words: '',
@@ -29,6 +30,8 @@ export const HubPage: React.FC = () => {
                     users
                 }
             }));
+
+            await dispatch(setHost(true));
 
             await socket.emit('ROOM:JOIN', {
                 roomId,

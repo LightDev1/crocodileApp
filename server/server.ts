@@ -34,6 +34,20 @@ io.on('connection', (socket: Socket) => {
         }
     });
 
+    socket.on('ROOM:READY', ({ roomId }) => {
+        socket.broadcast.to(roomId).emit('ROOM:START');
+    });
+
+    socket.on('ROOM:NEW_MESSAGE', ({ roomId, username, text }) => {
+        const message = {
+            username,
+            text,
+        };
+
+        rooms.get(roomId).get('messages').push(message);
+        socket.broadcast.to(roomId).emit('ROOM:NEW_MESSAGE', message);
+    });
+
     socket.on('disconnect', () => {
         try {
             rooms.forEach((value, roomId) => {

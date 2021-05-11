@@ -5,10 +5,17 @@ export enum RoomsActionsType {
     CREATE_ROOM = 'rooms/CREATE_ROOM',
     SET_ROOM_SETTINGS = 'rooms/SET_ROOM_SETTINGS',
     SET_ROOM_ID = 'rooms/SET_ROOM_ID',
+    SET_STARTED = 'rooms/SET_STARTED',
     SET_ROUNDS = 'rooms/SET_ROUNDS',
     SET_TIME = 'rooms/SET_TIME',
     SET_WORDS = 'rooms/SET_WORDS',
+    SET_MESSAGES = 'rooms/SET_MESSAGES',
     SET_USERS = 'rooms/SET_USERS',
+}
+
+export interface Message {
+    username: string;
+    text: string;
 }
 
 export interface CreateRoomActionInterface extends Action<RoomsActionsType> {
@@ -26,6 +33,11 @@ export interface SetRoomIdActionInterface extends Action<RoomsActionsType> {
     payload: string;
 }
 
+export interface SetStartedActionInterface extends Action<RoomsActionsType> {
+    type: RoomsActionsType.SET_STARTED;
+    payload: boolean;
+}
+
 export interface SetRoundsActionInterface extends Action<RoomsActionsType> {
     type: RoomsActionsType.SET_ROUNDS;
     payload: number;
@@ -39,6 +51,11 @@ export interface SetTimeActionInterface extends Action<RoomsActionsType> {
 export interface SetWordsActionInterface extends Action<RoomsActionsType> {
     type: RoomsActionsType.SET_WORDS;
     payload: string;
+}
+
+export interface SetMessagesActionInterface extends Action<RoomsActionsType> {
+    type: RoomsActionsType.SET_MESSAGES;
+    payload: Message;
 }
 
 export interface SetUsersActionInterface extends Action<RoomsActionsType> {
@@ -61,6 +78,11 @@ export const setRoomId = (payload: string): SetRoomIdActionInterface => ({
     payload,
 });
 
+export const setStarted = (payload: boolean): SetStartedActionInterface => ({
+    type: RoomsActionsType.SET_STARTED,
+    payload,
+});
+
 export const setRounds = (payload: number): SetRoundsActionInterface => ({
     type: RoomsActionsType.SET_ROUNDS,
     payload,
@@ -76,6 +98,11 @@ export const setWords = (payload: string): SetWordsActionInterface => ({
     payload,
 });
 
+export const setMessages = (payload: Message): SetMessagesActionInterface => ({
+    type: RoomsActionsType.SET_MESSAGES,
+    payload,
+});
+
 export const setUsers = (payload: Array<string>): SetUsersActionInterface => ({
     type: RoomsActionsType.SET_USERS,
     payload,
@@ -84,7 +111,9 @@ export const setUsers = (payload: Array<string>): SetUsersActionInterface => ({
 export type RoomAction = CreateRoomActionInterface
     | SetSettingsRoomActionInterface
     | SetRoomIdActionInterface
+    | SetStartedActionInterface
     | SetRoundsActionInterface
     | SetTimeActionInterface
     | SetWordsActionInterface
+    | SetMessagesActionInterface
     | SetUsersActionInterface;

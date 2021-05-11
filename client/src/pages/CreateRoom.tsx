@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Invite } from '../components/Invite';
 import { PlayersList } from '../components/PlayersList';
-import { setRounds, setTime, setWords } from '../store/ducks/rooms/actionCreators';
+import socket from '../socket';
+import { setRounds, setStarted, setTime, setWords } from '../store/ducks/rooms/actionCreators';
 import { setRoomSettings } from '../store/ducks/rooms/actionCreators';
-import { selectRoomId, selectRounds, selectTime, selectUsers, selectWords } from '../store/ducks/rooms/selectors';
+import { selectRoomId, selectRounds, selectStarted, selectTime, selectUsers, selectWords } from '../store/ducks/rooms/selectors';
+import { selectHost } from '../store/ducks/user/selectors';
 
 export const CreateRoom: React.FC = () => {
     const dispatch = useDispatch();
@@ -14,11 +16,14 @@ export const CreateRoom: React.FC = () => {
     const time = useSelector(selectTime);
     const words = useSelector(selectWords);
     const users = useSelector(selectUsers);
+    const host = useSelector(selectHost);
+    const started = useSelector(selectStarted);
 
-    const clickHandler = () => {
-        dispatch(setRoomSettings({
+    const clickHandler = async () => {
+        await dispatch(setRoomSettings({
             item: {
                 id: roomId,
+                started,
                 rounds,
                 time,
                 words,
@@ -26,7 +31,17 @@ export const CreateRoom: React.FC = () => {
                 users,
             }
         }));
+
+        dispatch(setStarted(true));
+
+        socket.emit('ROOM:READY', { roomId });
     };
+
+    useEffect(() => {
+        socket.on('ROOM:START', () => {
+            dispatch(setStarted(true));
+        });
+    });
 
     return (
         <div className="create__container">
@@ -43,6 +58,7 @@ export const CreateRoom: React.FC = () => {
                                 const payload = Number(event.target.value);
                                 dispatch(setRounds(payload));
                             }}
+                            disabled={!host}
                         >
                             <option value={2}>2</option>
                             <option value={3}>3</option>
@@ -65,6 +81,7 @@ export const CreateRoom: React.FC = () => {
                                 const payload = Number(event.target.value);
                                 dispatch(setTime(payload));
                             }}
+                            disabled={!host}
                         >
                             <option value={30}>30</option>
                             <option value={40}>40</option>
@@ -82,7 +99,7 @@ export const CreateRoom: React.FC = () => {
                         </select>
                     </div>
                     <label className="customs-check">
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled={!host} />
                         Использовать кастомные слова
                 </label>
                     <div className="custom-words__container">
@@ -95,16 +112,19 @@ export const CreateRoom: React.FC = () => {
                             onChange={(event) => {
                                 dispatch(setWords(event.target.value));
                             }}
+                            disabled={!host}
                         >
                         </textarea>
                     </div>
                     <div className="btn__container">
-                        <button
-                            className="start-btn"
-                            onClick={clickHandler}
-                        >
-                            Начать игру
-                        </button>
+                        {host && (
+                            <button
+                                className="start-btn"
+                                onClick={clickHandler}
+                            >
+                                Начать игру
+                            </button>
+                        )}
                     </div>
                 </div>
                 <PlayersList />

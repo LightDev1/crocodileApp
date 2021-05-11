@@ -5,8 +5,9 @@ import { UserState } from './contracts/state';
 const initiaUserState: UserState = {
     name: '',
     joined: false,
-    messages: []
-};
+    host: false,
+    message: ''
+}
 
 export const userReducer = produce((draft: Draft<UserState>, action: any) => {
     if (action.type === UserActionsType.SET_NAME) {
@@ -17,7 +18,11 @@ export const userReducer = produce((draft: Draft<UserState>, action: any) => {
         draft.joined = action.payload;
     }
 
+    if (action.type === UserActionsType.SET_HOST) {
+        draft.host = action.payload;
+    }
+
     if (action.type === UserActionsType.SET_MESSAGE) {
-        draft.messages = action.payload;
+        draft.message = action.payload;
     }
 }, initiaUserState);
