@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import { useSelector } from 'react-redux';
+import socket from '../socket';
 import { selectColor, selectRadius, selectToClear, selectTool } from '../store/ducks/canvas/selectors';
+import { selectRoomId } from '../store/ducks/rooms/selectors';
 
 export const Canvas: React.FC = () => {
+    const roomId = useSelector(selectRoomId);
     const color = useSelector(selectColor);
     const tool = useSelector(selectTool);
     const radius = useSelector(selectRadius);
@@ -11,6 +14,24 @@ export const Canvas: React.FC = () => {
     const [brushColor, setBrushColor] = useState(color);
 
     let saveableCanvas: any;
+
+    const drawController = () => {
+        socket.emit('ROOM:DRAW', {
+            saveableCanvas: saveableCanvas.getSaveData(),
+            roomId,
+        });
+        console.log(saveableCanvas.getSaveData());
+    };
+
+    useEffect(() => {
+        socket.on('ROOM:DRAW', (data) => {
+            if (!saveableCanvas) {
+                return;
+            }
+
+            saveableCanvas.loadSaveData(data);
+        });
+    }, [saveableCanvas]);
 
     useEffect(() => {
         switch (tool) {
@@ -30,16 +51,19 @@ export const Canvas: React.FC = () => {
 
     useEffect(() => {
         saveableCanvas.clear();
+        drawController();
+        // eslint-disable-next-line
     }, [toClear, saveableCanvas]);
 
     return (
-        <div className="temp-canvas">
+        <div className="temp-canvas" onClick={drawController}>
             <CanvasDraw
                 ref={canvasDraw => { saveableCanvas = canvasDraw }}
                 style={{ width: '100%', height: '100%' }}
                 hideGrid
                 brushRadius={radius}
                 brushColor={brushColor}
+                immediateLoading={true}
             />
         </div>
     );

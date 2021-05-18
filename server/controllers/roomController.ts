@@ -22,7 +22,7 @@ class RoomController {
     }
 
     createRoom(req: express.Request, res: express.Response) {
-        const { rounds, time, words, id } = req.body;
+        const { rounds, time, words, id, started } = req.body;
 
         console.log(rounds, time, words, id);
 
@@ -33,6 +33,7 @@ class RoomController {
                 ['messages', []],
                 ['rounds', rounds],
                 ['time', time],
+                ['started', started],
             ]));
         }
 
@@ -44,13 +45,14 @@ class RoomController {
 
         console.log(rounds, time, words, id);
 
-        if (!rooms.has(id)) {
+        if (rooms.has(id)) {
             rooms.set(id, new Map([
                 ['users', new Map()],
                 ['words', words],
                 ['messages', []],
                 ['rounds', rounds],
                 ['time', time],
+                ['started', true],
             ]));
         }
 

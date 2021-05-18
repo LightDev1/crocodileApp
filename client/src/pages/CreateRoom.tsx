@@ -20,6 +20,8 @@ export const CreateRoom: React.FC = () => {
     const started = useSelector(selectStarted);
 
     const clickHandler = async () => {
+        await dispatch(setStarted(true));
+
         await dispatch(setRoomSettings({
             item: {
                 id: roomId,

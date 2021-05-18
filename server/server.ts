@@ -3,12 +3,16 @@ dotenv.config();
 
 import express from 'express';
 import http from 'http';
+import multer from 'multer';
 import { Server, Socket } from 'socket.io';
 import { roomCtrl } from './controllers/roomController';
+import { uploadFileCtrl } from './controllers/uploadFileController';
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+const upload = multer({ dest: '/upload' });
 
 app.use(express.json());
 
@@ -17,6 +21,18 @@ export const rooms = new Map();
 app.post('/api/create_room', roomCtrl.createRoom);
 app.post('/api/set_settigs', roomCtrl.setSettings);
 app.get('/api/room_data/:id', roomCtrl.index);
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, __dirname + '/uploads');
+//     },
+//     filename: function (req, file, cb) {
+//         const ext = file.originalname.split('.').pop();
+//         cb(null, 'image-' + Date.now() + '.' + ext);
+//     }
+// });
+
+app.post('/api/upload', upload.single('avatar'), uploadFileCtrl.upload);
 
 io.on('connection', (socket: Socket) => {
     socket.on('ROOM:JOIN', ({ roomId, username }) => {
@@ -27,7 +43,6 @@ io.on('connection', (socket: Socket) => {
             const users = [...rooms.get(roomId).get('users').values()];
 
             socket.broadcast.to(roomId).emit('ROOM:SET_USERS', users);
-            console.log(users);
         } catch (e) {
             console.log(e);
             socket.emit('ROOM:ERROR', { message: 'Комнаты с таким кодом не существует' });
@@ -36,6 +51,18 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('ROOM:READY', ({ roomId }) => {
         socket.broadcast.to(roomId).emit('ROOM:START');
+
+        if (rooms.get(roomId).get('started')) {
+            console.log('Игра начинается');
+        }
+    });
+
+    socket.on('ROOM:DRAW', ({ saveableCanvas, roomId }) => {
+        try {
+            socket.broadcast.to(roomId).emit('ROOM:DRAW', saveableCanvas);
+        } catch (e) {
+            console.log(e);
+        }
     });
 
     socket.on('ROOM:NEW_MESSAGE', ({ roomId, username, text }) => {
