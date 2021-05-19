@@ -12,9 +12,9 @@ export const PlayersList: React.FC = () => {
             <div className="players__list">
                 {
                     users.map(user => (
-                        <div className="player" key={user}>
-                            <img src={avatar} alt="Аватар пользователя" />
-                            <span>{user}</span>
+                        <div className="player" key={user.name}>
+                            <img src={user.avatarBlob} alt="Аватар пользователя" />
+                            <span>{user.name}</span>
                         </div>
                     ))
                 }

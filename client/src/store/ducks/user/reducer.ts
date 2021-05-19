@@ -4,6 +4,7 @@ import { UserState } from './contracts/state';
 
 const initiaUserState: UserState = {
     name: '',
+    avatarBlob: '',
     joined: false,
     host: false,
     message: ''

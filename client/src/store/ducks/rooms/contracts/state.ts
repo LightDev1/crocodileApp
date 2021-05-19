@@ -1,3 +1,4 @@
+import { UserState } from "../../user/contracts/state";
 import { Message } from "../actionCreators";
 
 export interface Room {
@@ -7,7 +8,7 @@ export interface Room {
     time: number;
     words: string;
     messages: Array<Message>;
-    users: Array<string>;
+    users: Array<UserState>;
 }
 
 export interface RoomState {

@@ -12,7 +12,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const upload = multer({ dest: '/upload' });
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 app.use(express.json());
 
@@ -22,23 +23,13 @@ app.post('/api/create_room', roomCtrl.createRoom);
 app.post('/api/set_settigs', roomCtrl.setSettings);
 app.get('/api/room_data/:id', roomCtrl.index);
 
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, __dirname + '/uploads');
-//     },
-//     filename: function (req, file, cb) {
-//         const ext = file.originalname.split('.').pop();
-//         cb(null, 'image-' + Date.now() + '.' + ext);
-//     }
-// });
-
-app.post('/api/upload', upload.single('avatar'), uploadFileCtrl.upload);
+app.post('/api/upload', upload.single('image'), uploadFileCtrl.upload);
 
 io.on('connection', (socket: Socket) => {
-    socket.on('ROOM:JOIN', ({ roomId, username }) => {
+    socket.on('ROOM:JOIN', ({ roomId, user }) => {
         try {
             socket.join(roomId);
-            rooms.get(roomId).get('users').set(socket.id, username);
+            rooms.get(roomId).get('users').set(socket.id, user);
 
             const users = [...rooms.get(roomId).get('users').values()];
 

@@ -116,6 +116,10 @@ body {
           @include playerIcon();
         }
 
+        .file__input {
+          display: none;
+        }
+
         button {
           width: 90px;
           background-color: #5CB85C;

@@ -1,4 +1,5 @@
 import { Action } from "redux";
+import { UserState } from "../user/contracts/state";
 import { RoomState } from "./contracts/state";
 
 export enum RoomsActionsType {
@@ -60,7 +61,7 @@ export interface SetMessagesActionInterface extends Action<RoomsActionsType> {
 
 export interface SetUsersActionInterface extends Action<RoomsActionsType> {
     type: RoomsActionsType.SET_USERS;
-    payload: Array<string>;
+    payload: Array<UserState>;
 }
 
 export const createRoom = (payload: RoomState): CreateRoomActionInterface => ({
@@ -103,7 +104,7 @@ export const setMessages = (payload: Message): SetMessagesActionInterface => ({
     payload,
 });
 
-export const setUsers = (payload: Array<string>): SetUsersActionInterface => ({
+export const setUsers = (payload: Array<UserState>): SetUsersActionInterface => ({
     type: RoomsActionsType.SET_USERS,
     payload,
 });
