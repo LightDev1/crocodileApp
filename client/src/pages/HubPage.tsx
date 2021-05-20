@@ -8,14 +8,9 @@ import { createRoom, setUsers } from '../store/ducks/rooms/actionCreators';
 import { generateMD5 } from '../utils/generateHash';
 import { selectName, selectUser } from '../store/ducks/user/selectors';
 import { selectUsers } from '../store/ducks/rooms/selectors';
-import { setHost, setJoined, setName } from '../store/ducks/user/actionCreators';
+import { setAvatar, setHost, setJoined, setName } from '../store/ducks/user/actionCreators';
 import axios from 'axios';
 import { uploadImage } from '../utils/uploadImage';
-
-export interface ImageObj {
-    blobUrl: string;
-    file: File;
-}
 
 export const HubPage: React.FC = () => {
     const dispatch = useDispatch();
@@ -24,7 +19,7 @@ export const HubPage: React.FC = () => {
     const users = useSelector(selectUsers);
     const name = useSelector(selectName);
     const inputFileRef = useRef<HTMLInputElement>(null);
-    const [image, setImage] = useState<ImageObj>();
+    const [image, setImage] = useState('');
 
     const createRoomRequest = async () => {
         if (name) {
@@ -52,6 +47,8 @@ export const HubPage: React.FC = () => {
             dispatch(setUsers(data.users));
 
             dispatch(setJoined(true));
+
+            localStorage.setItem('username', name);
         } else {
             alert('Введите имя');
         }
@@ -63,28 +60,41 @@ export const HubPage: React.FC = () => {
         }
     };
 
-    const handleChangeFileInput = useCallback((event: Event) => {
-        if (event.target) {
-            const target = (event.target as HTMLInputElement);
-            const file = target.files?.[0];
+    const handleChangeFileInput = useCallback(async (event: Event) => {
+        try {
+            if (event.target) {
+                const target = (event.target as HTMLInputElement);
+                const file = target.files?.[0];
 
-            if (file) {
-                const fileBlob = new Blob([file]);
-                const obj = {
-                    blobUrl: URL.createObjectURL(fileBlob),
-                    file,
-                };
-                setImage(obj);
-                localStorage.setItem('avatar', JSON.stringify(obj));
+                if (file) {
+                    const fileBlob = new Blob([file]);
+                    const obj = {
+                        blobUrl: URL.createObjectURL(fileBlob),
+                        file,
+                    };
+
+                    const imageLink = await uploadImage(obj.file);
+
+                    setImage(imageLink.url);
+
+                    dispatch(setAvatar(imageLink.url));
+                    const saveableObj = {
+                        obj,
+                        imageLink
+                    };
+                    localStorage.setItem('avatar', JSON.stringify(saveableObj));
+                }
             }
+        } catch (e) {
+            console.log(e);
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (inputFileRef.current) {
             inputFileRef.current.addEventListener('change', handleChangeFileInput);
         }
-    }, []);
+    }, [handleChangeFileInput]);
 
     useEffect(() => {
         socket.on('ROOM:SET_USERS', (users) => {
@@ -98,9 +108,17 @@ export const HubPage: React.FC = () => {
             const avatarString = localStorage.getItem('avatar');
             // @ts-ignore
             const avatar = JSON.parse(avatarString);
-            setImage(avatar);
+
+            setImage(avatar.imageLink.url);
+
+            dispatch(setAvatar(avatar.imageLink.url));
+            if (localStorage.getItem('username')) {
+                const username = localStorage.getItem('username');
+                // @ts-ignore
+                dispatch(setName(username));
+            }
         }
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="hub__container">
@@ -112,11 +130,13 @@ export const HubPage: React.FC = () => {
                     type="text"
                     placeholder="Введите имя"
                     value={name}
-                    onChange={(event) => { dispatch(setName(event.target.value)) }}
+                    onChange={(event) => {
+                        dispatch(setName(event.target.value));
+                    }}
                 />
                 <div className="avatar-choose__container">
                     <img
-                        src={image ? image.blobUrl : avatar}
+                        src={image ? image : avatar}
                         alt="Аватар пользователя"
                     />
                     <label htmlFor="upload__file">

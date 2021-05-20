@@ -5,10 +5,16 @@ export enum UserActionsType {
     SET_MESSAGE = 'user/SET_MESSAGE',
     SET_JOINED = 'user/SET_JOINED',
     SET_HOST = 'user/SET_HOST',
+    SET_AVATAR = 'user/SET_AVATAR',
 }
 
 export interface SetNameActionInterface extends Action<UserActionsType> {
     type: UserActionsType.SET_NAME;
+    payload: string;
+}
+
+export interface SetAvatarActionInterface extends Action<UserActionsType> {
+    type: UserActionsType.SET_AVATAR;
     payload: string;
 }
 
@@ -32,6 +38,11 @@ export const setName = (payload: string): SetNameActionInterface => ({
     payload,
 });
 
+export const setAvatar = (payload: string): SetAvatarActionInterface => ({
+    type: UserActionsType.SET_AVATAR,
+    payload,
+});
+
 export const setJoined = (payload: boolean): SetJoinedActionInterface => ({
     type: UserActionsType.SET_JOINED,
     payload,
@@ -47,4 +58,4 @@ export const setMessage = (payload: string): SetMessageActionInterface => ({
     payload,
 });
 
-export type UserAction = SetNameActionInterface | SetJoinedActionInterface | SetHostActionInterface | SetMessageActionInterface;
+export type UserAction = SetNameActionInterface | SetAvatarActionInterface | SetJoinedActionInterface | SetHostActionInterface | SetMessageActionInterface;

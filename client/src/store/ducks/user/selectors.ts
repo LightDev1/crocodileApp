@@ -5,6 +5,8 @@ export const selectUser = (state: RootState): UserState => state.user;
 
 export const selectName = (state: RootState) => selectUser(state).name;
 
+export const selectAvatar = (state: RootState) => selectUser(state).avatar;
+
 export const selectMessage = (state: RootState) => selectUser(state).message;
 
 export const selectJoined = (state: RootState) => selectUser(state).joined;

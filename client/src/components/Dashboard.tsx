@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import avatar from '../images/avatar.png';
 import { selectUsers } from '../store/ducks/rooms/selectors';
 
 export const Dashboard: React.FC = () => {
@@ -9,14 +8,14 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard">
-            {
+            {users && (
                 users.map((user, index) => (
                     <div className="player__block" key={user.name + index}>
                         <div className="spot">
                             <h3>#{index + 1}</h3>
                         </div>
                         <div className="player">
-                            <img src={user.avatarBlob} alt="Аватар пользователя" />
+                            <img src={user.avatar} alt="Аватар пользователя" />
                             <span>{user.name}</span>
                         </div>
                         <div className="score">
@@ -24,6 +23,7 @@ export const Dashboard: React.FC = () => {
                         </div>
                     </div>
                 ))
+            )
             }
         </div>
     );

@@ -47,7 +47,7 @@ class RoomController {
 
         if (rooms.has(id)) {
             rooms.set(id, new Map([
-                ['users', new Map()],
+                ['users', rooms.get(id).get('users')],
                 ['words', words],
                 ['messages', []],
                 ['rounds', rounds],

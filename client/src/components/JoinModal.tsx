@@ -6,20 +6,20 @@ import socket from '../socket';
 import { setRoomId, setUsers } from '../store/ducks/rooms/actionCreators';
 import { selectRoomId } from '../store/ducks/rooms/selectors';
 import { setJoined } from '../store/ducks/user/actionCreators';
-import { selectName } from '../store/ducks/user/selectors';
+import { selectName, selectUser } from '../store/ducks/user/selectors';
 
 export const JoinModal: React.FC = () => {
     const dispatch = useDispatch();
     const roomId = useSelector(selectRoomId);
+    const user = useSelector(selectUser);
     const name = useSelector(selectName);
-    const username = useSelector(selectName);
 
     const joinInRoom = async () => {
         try {
             if (roomId && name) {
                 await socket.emit('ROOM:JOIN', {
                     roomId,
-                    username,
+                    user,
                 });
 
                 const { data } = await axios.get(`/api/room_data/${roomId}`);
@@ -27,6 +27,8 @@ export const JoinModal: React.FC = () => {
                 dispatch(setUsers(data.users));
 
                 dispatch(setJoined(true));
+
+                localStorage.setItem('username', name);
             } else {
                 alert('Введите имя и ID комнаты');
             }

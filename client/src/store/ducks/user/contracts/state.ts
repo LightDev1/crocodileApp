@@ -1,6 +1,6 @@
 export interface UserState {
     name: string;
-    avatarBlob: string;
+    avatar: string;
     joined: boolean;
     host: boolean;
     message: string;

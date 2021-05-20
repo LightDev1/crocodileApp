@@ -43,9 +43,9 @@ io.on('connection', (socket: Socket) => {
     socket.on('ROOM:READY', ({ roomId }) => {
         socket.broadcast.to(roomId).emit('ROOM:START');
 
-        if (rooms.get(roomId).get('started')) {
-            console.log('Игра начинается');
-        }
+        // if (rooms.get(roomId).get('started')) {
+        //     console.log('Игра начинается');
+        // }
     });
 
     socket.on('ROOM:DRAW', ({ saveableCanvas, roomId }) => {

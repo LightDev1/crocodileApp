@@ -31,8 +31,9 @@ export const Chat: React.FC = () => {
     useEffect(() => {
         socket.on('ROOM:NEW_MESSAGE', (message) => {
             dispatch(setMessages(message));
+            console.log('Сработал');
         });
-    }, [dispatch]);
+    }, [dispatch, messages]);
 
     useEffect(() => {
         //@ts-ignore
