@@ -21,6 +21,8 @@ export const HubPage: React.FC = () => {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState('');
 
+    console.log('render in hubpage');
+
     const createRoomRequest = async () => {
         if (name) {
             await dispatch(createRoom({

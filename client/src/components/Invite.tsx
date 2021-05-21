@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import clipboard from 'clipboard';
+import Clipboard from 'clipboard';
 import { selectRoomId } from '../store/ducks/rooms/selectors';
 
 export const Invite: React.FC = () => {
     const roomId = useSelector(selectRoomId);
-    new clipboard('.copy-btn');
+    new Clipboard('.copy-btn');
 
     return (
         <div className="invite__container">

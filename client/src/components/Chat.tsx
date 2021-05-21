@@ -1,39 +1,41 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import socket from '../socket';
 import { setMessages } from '../store/ducks/rooms/actionCreators';
 import { selectMessages, selectRoomId } from '../store/ducks/rooms/selectors';
 import { setMessage } from '../store/ducks/user/actionCreators';
-import { selectMessage, selectName } from '../store/ducks/user/selectors';
+import { selectMessage, selectUser } from '../store/ducks/user/selectors';
 
 export const Chat: React.FC = () => {
     const dispatch = useDispatch();
     const roomId = useSelector(selectRoomId);
     const messages = useSelector(selectMessages);
     const message = useSelector(selectMessage);
-    const username = useSelector(selectName);
+    const user = useSelector(selectUser);
     const messagesRef = useRef(null);
 
-    const keyDownHandler = async (event: any) => {
+    console.log('Render');
+    const keyDownHandler = useCallback(async (event: any) => {
         if (event.key === 'Enter' && message) {
             await socket.emit('ROOM:NEW_MESSAGE', {
                 roomId,
-                username,
+                user,
                 text: message,
             });
 
-            dispatch(setMessages({ username, text: message }));
+            dispatch(setMessages({ username: user.name, text: message }));
 
             dispatch(setMessage(''));
         }
-    };
+    }, [dispatch, message, roomId, user]);
+
+    const newMessageHandler = useCallback((messageFromServer) => {
+        dispatch(setMessages(messageFromServer));
+    }, [dispatch])
 
     useEffect(() => {
-        socket.on('ROOM:NEW_MESSAGE', (message) => {
-            dispatch(setMessages(message));
-            console.log('Сработал');
-        });
-    }, [dispatch, messages]);
+        socket.off('ROOM:NEW_MESSAGE', newMessageHandler).on('ROOM:NEW_MESSAGE', newMessageHandler);
+    }, [newMessageHandler]);
 
     useEffect(() => {
         //@ts-ignore

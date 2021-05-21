@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
@@ -15,13 +15,13 @@ export const Canvas: React.FC = () => {
 
     let saveableCanvas: any;
 
-    const drawController = () => {
+    const drawController = useCallback(() => {
         socket.emit('ROOM:DRAW', {
             saveableCanvas: saveableCanvas.getSaveData(),
             roomId,
         });
         console.log(saveableCanvas.getSaveData());
-    };
+    }, [roomId, saveableCanvas]);
 
     useEffect(() => {
         socket.on('ROOM:DRAW', (data) => {

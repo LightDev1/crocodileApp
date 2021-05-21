@@ -56,9 +56,9 @@ io.on('connection', (socket: Socket) => {
         }
     });
 
-    socket.on('ROOM:NEW_MESSAGE', ({ roomId, username, text }) => {
+    socket.on('ROOM:NEW_MESSAGE', ({ roomId, user, text }) => {
         const message = {
-            username,
+            username: user.name,
             text,
         };
 

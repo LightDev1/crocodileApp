@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { selectUsers } from '../store/ducks/rooms/selectors';
 
+import avatar from '../images/avatar.png';
+
 export const Dashboard: React.FC = () => {
     const users = useSelector(selectUsers);
 
@@ -15,7 +17,7 @@ export const Dashboard: React.FC = () => {
                             <h3>#{index + 1}</h3>
                         </div>
                         <div className="player">
-                            <img src={user.avatar} alt="Аватар пользователя" />
+                            <img src={user.avatar ? user.avatar : avatar} alt="Аватар пользователя" />
                             <span>{user.name}</span>
                         </div>
                         <div className="score">
